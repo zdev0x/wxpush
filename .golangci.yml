@@ -2,7 +2,7 @@ linters:
   enable:
     - gofmt
     - govet
-    - golint
+    - revive
     - gosec
     - unconvert
     - goconst
@@ -28,9 +28,9 @@ issues:
         - gocyclo
         - lll
         - goconst
+  exclude-dirs:
+    - vendor/
 
 run:
   deadline: 5m
   tests: true
-  skip-dirs:
-    - vendor/ 

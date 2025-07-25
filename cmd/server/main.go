@@ -15,6 +15,8 @@ import (
 	"github.com/zdev0x/wxpush/internal/logger"
 	"github.com/zdev0x/wxpush/internal/middleware"
 	"github.com/zdev0x/wxpush/internal/model"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var (
@@ -105,7 +107,7 @@ func main() {
 		"Build Time": date,
 
 		// 服务配置
-		"Run Mode":       strings.Title(cfg.Server.Mode),
+		"Run Mode":       cases.Title(language.Und).String(cfg.Server.Mode),
 		"Listen Address": cfg.Server.ListenAddr,
 		"Log File":       cfg.Server.LogFile,
 

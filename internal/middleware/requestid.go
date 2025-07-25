@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -23,16 +23,24 @@ func RequestID() gin.HandlerFunc {
 	}
 }
 
-// randomString 生成指定长度的随机字符串
+// randomString 生成指定长度的随机字符串（使用crypto/rand）
 func randomString(n int) string {
 	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		// 退回到伪随机
+		for i := range b {
+			b[i] = letters[i%len(letters)]
+		}
+		return string(b)
+	}
 	for i := range b {
-		b[i] = letters[rand.Int63()%int64(len(letters))]
+		b[i] = letters[int(b[i])%len(letters)]
 	}
 	return string(b)
 }
 
 // Init 初始化中间件
 func Init() {
-	rand.Seed(time.Now().UnixNano())
+	// 不再需要 rand.Seed
 }

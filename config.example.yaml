@@ -1,40 +1,40 @@
 # 微信公众号配置
 wechat:
-  app_id: "wx1234567890abcdef"                    # 微信公众平台 AppID
-  app_secret: "1234567890abcdef1234567890abcdef"  # 微信公众平台 AppSecret
-  token: "1234567890abcdef1234567890abcdef"       # 用于服务器验证
+  app_id: "REPLACE_ME_APPID" # 微信公众平台 AppID
+  app_secret: "REPLACE_ME_SECRET" # 微信公众平台 AppSecret
+  token: "REPLACE_ME_TOKEN" # 用于服务器验证
 
 # 模板配置
 templates:
-  - name: "sms_forward"                           # 模板名称
-    id: "ABC1234567890xyz"                        # 模板ID
-    title: "短信验证码"                           # 模板说明
+  - name: "sms_forward" # 模板名称
+    id: "ABC1234567890xyz" # 模板ID
+    title: "短信验证码" # 模板说明
     content: "短信来源：{{SOURCE.DATA}} 消息内容：{{CONTENT.DATA}} 发送时间：{{DATETIME.DATA}}"
 
-  - name: "github_monitor"                        # GitHub监控模板
-    id: "XYZ1234567890abc"                        # 模板ID
-    title: "GitHub用户监控"                       # 模板说明
+  - name: "github_monitor" # GitHub监控模板
+    id: "XYZ1234567890abc" # 模板ID
+    title: "GitHub用户监控" # 模板说明
     content: "监控人员：{{MONITOR.DATA}} 操作时间：{{CREATED_AT.DATA}} 操作类型：{{EVENT_TYPE.DATA}} 项目名称：{{PROJECT_NAME.DATA}} 项目作者：{{DEVELOPER.DATA}} 告警时间：{{DATETIME.DATA}}"
 
 # 用户配置
 users:
-  - name: "user1"                                 # 用户别名
-    openid: "oxxxxxxxxxxxxxxx1"                   # 微信用户OpenID
+  - name: "user1" # 用户别名
+    openid: "oxxxxxxxxxxxxxxx1" # 微信用户OpenID
 
-  - name: "user2"                                 # 用户别名
-    openid: "oxxxxxxxxxxxxxxx2"                   # 微信用户OpenID
+  - name: "user2" # 用户别名
+    openid: "oxxxxxxxxxxxxxxx2" # 微信用户OpenID
 
 # 通知组配置
 notify_groups:
-  - name: "default"                               # 默认通知组
-    users: ["user1", "user2"]                     # 组内用户列表
+  - name: "default" # 默认通知组
+    users: ["user1", "user2"] # 组内用户列表
 
-  - name: "admin"                                 # 管理员通知组
-    users: ["user1"]                              # 组内用户列表
+  - name: "admin" # 管理员通知组
+    users: ["user1"] # 组内用户列表
 
 # 服务配置
 server:
-  api_key: "1234567890abcdef1234567890abcdef"    # API访问密钥
-  listen_addr: ":8801"                            # 监听地址
-  log_file: "logs/push.log"                       # 日志文件路径
-  mode: "release"                                 # 运行模式：release(默认)/debug/test 
+  api_key: "REPLACE_ME_API_KEY" # API访问密钥
+  listen_addr: ":8801" # 监听地址
+  log_file: "logs/push.log" # 日志文件路径
+  mode: "release" # 运行模式：release(默认)/debug/test

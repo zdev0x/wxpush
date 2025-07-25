@@ -68,6 +68,7 @@ func SendTemplateMsg(cfg *config.Config, templateName, groupName string, params 
 				return
 			}
 
+			// url 来源于微信官方API，安全
 			url := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", token)
 			resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 			if err != nil {

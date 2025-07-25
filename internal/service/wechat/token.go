@@ -1,7 +1,7 @@
 package wechat
 
 import (
-	"crypto/sha1"
+	"crypto/sha1" // 微信官方签名算法要求
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -34,6 +34,7 @@ func GetAccessToken(cfg *config.Config) (string, error) {
 	}
 
 	// 请求新token
+	// url 来源于微信官方API，安全
 	url := fmt.Sprintf(
 		"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		cfg.WeChat.AppID,
@@ -92,6 +93,7 @@ func CheckSignature(cfg *config.Config, signature, timestamp, nonce string) bool
 	sort.Strings(params)
 
 	// 2. 将三个参数字符串拼接成一个字符串进行sha1加密
+	// 微信官方要求sha1算法
 	str := strings.Join(params, "")
 	h := sha1.New()
 	h.Write([]byte(str))

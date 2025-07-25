@@ -33,10 +33,16 @@ func HandleTemplateMsgPush(c *gin.Context) {
 	templateName := c.Query("template")
 	groupName := c.Query("notify_group")
 	if templateName == "" || groupName == "" {
-		logger.Error(model.ActionPushMessage, requestID, model.ErrInvalidParam, nil, map[string]interface{}{
-			"template": templateName,
-			"group":    groupName,
-		})
+		logger.Error(
+			model.ActionPushMessage,
+			requestID,
+			model.ErrInvalidParam,
+			nil,
+			map[string]interface{}{
+				"template": templateName,
+				"group":    groupName,
+			},
+		)
 		c.JSON(http.StatusBadRequest, model.NewErrorResponse(
 			model.ErrInvalidParam,
 			"缺少模板名称或通知组名称",

@@ -63,7 +63,13 @@ func Info(action string, requestID string, extra map[string]interface{}) {
 }
 
 // Error 写入error级别日志
-func Error(action string, requestID string, code string, err error, extra map[string]interface{}) {
+func Error(
+	action string,
+	requestID string,
+	code string,
+	err error,
+	extra map[string]interface{},
+) {
 	entry := model.NewLogEntry(model.LevelError, action, model.StatusError, requestID).
 		WithCode(code).
 		WithMessage(err.Error())
@@ -84,7 +90,14 @@ func Warn(action string, requestID string, message string, extra map[string]inte
 }
 
 // TemplatePush 写入模板推送日志
-func TemplatePush(status string, templateName string, groupName string, requestID string, err error, result *model.SendResult) {
+func TemplatePush(
+	status string,
+	templateName string,
+	groupName string,
+	requestID string,
+	err error,
+	result *model.SendResult,
+) {
 	extra := map[string]interface{}{
 		"template": templateName,
 		"group":    groupName,

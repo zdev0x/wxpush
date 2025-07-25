@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1
 
 # 第一阶段：构建Go可执行文件
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# 安装git，解决 go mod download 依赖私有/远程仓库时失败
-RUN apk add --no-cache git
+# 安装git和build基础依赖，确保go mod download可用
+RUN apk add --no-cache git ca-certificates
 
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy && go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o wxpush ./cmd/server
 

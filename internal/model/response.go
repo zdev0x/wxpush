@@ -25,7 +25,7 @@ const (
 
 	// 业务错误
 	// 仅为错误码常量，无敏感信息
-	ErrInvalidAPIKey    = "INVALID_API_KEY"    // 无效的API密钥
+	ErrInvalidAPIKey    = "INVALID_API_KEY"    // 无效的API密钥 // #nosec G101
 	ErrTemplateNotFound = "TEMPLATE_NOT_FOUND" // 模板不存在
 	ErrGroupNotFound    = "GROUP_NOT_FOUND"    // 通知组不存在
 	ErrUserNotFound     = "USER_NOT_FOUND"     // 用户不存在

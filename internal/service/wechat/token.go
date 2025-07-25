@@ -1,7 +1,7 @@
 package wechat
 
 import (
-	"crypto/sha1" // 微信官方签名算法要求，无法更换
+	"crypto/sha1" // 微信官方签名算法要求，无法更换 // #nosec G505
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -39,7 +39,7 @@ func GetAccessToken(cfg *config.Config) (string, error) {
 		"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		cfg.WeChat.AppID,
 		cfg.WeChat.AppSecret,
-	)
+	) // #nosec G107
 	resp, err := http.Get(url)
 	if err != nil {
 		logger.Error("token_refresh", "", model.ErrInternal, err, nil)
@@ -94,7 +94,7 @@ func CheckSignature(cfg *config.Config, signature, timestamp, nonce string) bool
 	// 2. 将三个参数字符串拼接成一个字符串进行sha1加密
 	// 微信官方要求sha1算法，风险可接受
 	str := strings.Join(params, "")
-	h := sha1.New()
+	h := sha1.New() // #nosec G401
 	h.Write([]byte(str))
 	sign := hex.EncodeToString(h.Sum(nil))
 

@@ -81,7 +81,8 @@ func SendTemplateMsg(
 			url := fmt.Sprintf(
 				"https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s",
 				token,
-			) // #nosec G107
+			)
+			// #nosec G107
 			resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 			if err != nil {
 				mu.Lock()

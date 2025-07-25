@@ -1,7 +1,8 @@
 package wechat
 
 import (
-	"crypto/sha1" // 微信官方签名算法要求，无法更换 // #nosec G505
+	// #nosec G505
+	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -39,7 +40,8 @@ func GetAccessToken(cfg *config.Config) (string, error) {
 		"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		cfg.WeChat.AppID,
 		cfg.WeChat.AppSecret,
-	) // #nosec G107
+	)
+	// #nosec G107
 	resp, err := http.Get(url)
 	if err != nil {
 		logger.Error("token_refresh", "", model.ErrInternal, err, nil)

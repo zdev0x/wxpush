@@ -124,14 +124,20 @@ func SendTemplateMsg(cfg *config.Config, templateName, groupName string, params 
 
 	// 记录发送结果
 	if result.FailedCount > 0 {
-		logger.Error(model.ActionPushMessage, requestID, model.ErrSendFailed, fmt.Errorf("部分用户发送失败"), map[string]interface{}{
-			"template":      templateName,
-			"group":         groupName,
-			"success":       result.SuccessUsers,
-			"failed":        result.FailedUsers,
-			"success_count": result.SuccessCount,
-			"failed_count":  result.FailedCount,
-		})
+		logger.Error(
+			model.ActionPushMessage,
+			requestID,
+			model.ErrSendFailed,
+			fmt.Errorf("部分用户发送失败"),
+			map[string]interface{}{
+				"template":      templateName,
+				"group":         groupName,
+				"success":       result.SuccessUsers,
+				"failed":        result.FailedUsers,
+				"success_count": result.SuccessCount,
+				"failed_count":  result.FailedCount,
+			},
+		)
 		return result, fmt.Errorf("部分用户发送失败: %v", result.FailedUsers)
 	}
 

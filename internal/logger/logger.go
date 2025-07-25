@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/zdev0x/wxpush/internal/model"
@@ -16,13 +17,15 @@ var (
 
 // Init 初始化日志
 func Init(file string) error {
-	// 检查日志文件是否可写
-	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	// 只允许绝对路径，防止目录穿越
+	if !filepath.IsAbs(file) {
+		return fmt.Errorf("日志文件路径必须为绝对路径: %s", file)
+	}
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		return fmt.Errorf("打开日志文件失败: %v", err)
 	}
-	f.Close()
-
+	_ = f.Close()
 	logFile = file
 	return nil
 }
@@ -32,7 +35,7 @@ func write(entry model.LogEntry) error {
 	mu.Lock()
 	defer mu.Unlock()
 
-	f, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		return fmt.Errorf("打开日志文件失败: %v", err)
 	}

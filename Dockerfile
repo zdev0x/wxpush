@@ -3,6 +3,10 @@
 # 第一阶段：构建Go可执行文件
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
+
+# 安装git，解决 go mod download 依赖私有/远程仓库时失败
+RUN apk add --no-cache git
+
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .

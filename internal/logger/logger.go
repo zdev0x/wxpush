@@ -98,7 +98,8 @@ func TemplatePush(status string, templateName string, groupName string, requestI
 
 	entry := model.NewLogEntry(model.LevelInfo, model.ActionPushMessage, status, requestID)
 	if err != nil {
-		entry = entry.WithCode(model.ErrSendFailed).WithMessage(err.Error())
+		entry = entry.WithCode(model.ErrSendFailed).
+			WithMessage(err.Error())
 	}
 	entry = entry.WithExtra(extra)
 	_ = write(entry)

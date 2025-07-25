@@ -14,11 +14,20 @@ import (
 )
 
 // SendTemplateMsg 发送模板消息
-func SendTemplateMsg(cfg *config.Config, templateName, groupName string, params map[string]interface{}, requestID string) (*model.SendResult, error) {
+func SendTemplateMsg(
+	cfg *config.Config,
+	templateName string,
+	groupName string,
+	params map[string]interface{},
+	requestID string,
+) (*model.SendResult, error) {
 	// 获取模板配置
 	tmpl, err := config.GetTemplate(cfg, templateName)
 	if err != nil {
-		return nil, fmt.Errorf("获取模板失败: %v", err)
+		return nil, fmt.Errorf(
+			"获取模板失败: %v",
+			err,
+		)
 	}
 
 	// 获取用户列表

@@ -101,4 +101,3 @@ func CheckSignature(cfg *config.Config, signature, timestamp, nonce string) bool
 	// 3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信
 	return sign == signature
 }
-}

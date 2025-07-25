@@ -1,55 +1,65 @@
-linters:
-  enable:
-    - gofmt
-    - govet
-    - revive
-    - gosec
-    - unconvert
-    - goconst
-    - gocyclo
-    - goimports
-    - misspell
-    - lll
-    - prealloc
+name: CI
 
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-  lll:
-    line-length: 120
-  goconst:
-    min-len: 3
-    min-occurrences: 3
-  gosec:
-    excludes:
-      - G505 # 忽略 SHA-1 检查（微信 API 可能需要）
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - lll
-        - goconst
-    - path: internal/service/wechat/token.go
-      linters:
-        - gosec
-      text: "G505" # 针对 token.go 的 SHA-1 忽略（可选）
-    - path: internal/service/wechat/.+\.go
-      linters:
-        - gosec
-      text: "G107" # 忽略微信服务中的变量 URL 检查（确认安全）
-    - path: internal/model/response.go
-      linters:
-        - gosec
-      text: "G101" # 忽略 response.go 的硬编码凭据误报
-  exclude-dirs:
-    - vendor/
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-run:
-  deadline: 5m
-  tests: true
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+          cache: true
 
-output:
-  formats:
-    - format: colored-line-number # 更新为新格式
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.64.8
+          args: --timeout=5m --out-format=colored-line-number
+
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.txt
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: "true"
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: "CRITICAL,HIGH"

@@ -1,0 +1,36 @@
+linters:
+  enable:
+    - gofmt
+    - govet
+    - golint
+    - gosec
+    - unconvert
+    - goconst
+    - gocyclo
+    - goimports
+    - misspell
+    - lll
+    - prealloc
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  lll:
+    line-length: 120
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - lll
+        - goconst
+
+run:
+  deadline: 5m
+  tests: true
+  skip-dirs:
+    - vendor/ 

@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  wxpush:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wxpush:latest
+    container_name: wxpush
+    restart: unless-stopped
+    ports:
+      - "8801:8801"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./logs:/app/logs
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8801/wx/event"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s 

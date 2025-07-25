@@ -1,0 +1,33 @@
+# 配置文件
+config.yaml
+
+# 日志文件
+logs/
+*.log
+
+# 编译产物
+wxpush
+dist/
+
+# GoReleaser
+/dist/
+
+# Go编译缓存
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db 

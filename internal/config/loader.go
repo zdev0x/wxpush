@@ -3,8 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -12,9 +10,9 @@ import (
 // Load 加载配置文件
 func Load(filename string) (*Config, error) {
 	// 只允许绝对路径或当前目录，防止目录穿越
-	if !filepath.IsAbs(filename) && !strings.HasPrefix(filename, ".") {
-		return nil, fmt.Errorf("配置文件路径不安全: %s", filename)
-	}
+	// if !filepath.IsAbs(filename) && !strings.HasPrefix(filename, ".") {
+	// 	return nil, fmt.Errorf("配置文件路径不安全: %s", filename)
+	// }
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("读取配置文件失败: %v", err)

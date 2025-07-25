@@ -17,7 +17,7 @@ const logo = `
  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚═╝  ╚═╝`
 
 // ShowBanner 显示启动banner
-func ShowBanner(version, commit, date string, cfg map[string]string) {
+func ShowBanner(_ string, commit, date string, cfg map[string]string) {
 	// 创建颜色输出
 	titleColor := color.New(color.FgHiCyan, color.Bold)
 	infoColor := color.New(color.FgHiWhite)

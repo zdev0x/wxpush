@@ -253,45 +253,39 @@ docker-compose up -d
 
 ### 系统服务 (Linux)
 
-使用一键安装脚本：
+使用一键管理脚本：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zdev0x/wxpush/main/scripts/install.sh | sudo bash
-```
+# 下载管理脚本
+curl -fsSL https://raw.githubusercontent.com/zdev0x/wxpush/main/scripts/manage.sh -o manage.sh
+chmod +x manage.sh
 
-或手动安装：
+# 安装服务
+sudo ./manage.sh install
 
-```bash
-# 下载二进制文件
-sudo wget -O /usr/local/bin/wxpush https://github.com/zdev0x/wxpush/releases/latest/download/wxpush_Linux_x86_64.tar.gz
-
-# 创建配置目录
-sudo mkdir -p /etc/wxpush
-sudo cp config.yaml /etc/wxpush/
-
-# 创建 systemd 服务
-sudo tee /etc/systemd/system/wxpush.service > /dev/null <<EOF
-[Unit]
-Description=WxPush Service
-After=network.target
-
-[Service]
-Type=simple
-User=wxpush
-Group=wxpush
-ExecStart=/usr/local/bin/wxpush -c /etc/wxpush/config.yaml
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-EOF
+# 编辑配置文件
+sudo ./manage.sh config
 
 # 启动服务
-sudo systemctl daemon-reload
-sudo systemctl enable wxpush
-sudo systemctl start wxpush
+sudo ./manage.sh start
+
+# 查看状态
+./manage.sh status
+
+# 查看日志
+./manage.sh logs
 ```
+
+**管理脚本支持的命令：**
+- `install` - 安装服务
+- `uninstall [--keep]` - 卸载服务（--keep 保留配置）
+- `start/stop/restart` - 启动/停止/重启服务
+- `enable/disable` - 启用/禁用开机启动
+- `status` - 查看服务状态
+- `logs` - 查看实时日志
+- `update` - 更新到最新版本
+- `config` - 编辑配置文件
+- `help` - 显示帮助信息
 
 ## 🛠️ 开发指南
 

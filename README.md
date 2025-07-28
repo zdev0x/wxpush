@@ -1,6 +1,6 @@
-# WxPush
-
 <div align="center">
+
+# WxPush
 
 [![CI](https://github.com/zdev0x/wxpush/actions/workflows/ci.yml/badge.svg)](https://github.com/zdev0x/wxpush/actions/workflows/ci.yml)
 [![Docker](https://github.com/zdev0x/wxpush/actions/workflows/docker.yml/badge.svg)](https://github.com/zdev0x/wxpush/actions/workflows/docker.yml)
@@ -15,6 +15,16 @@
 支持多模板、多用户组，适合自动化、监控、通知等场景
 
 ✨ **支持微信公众平台测试号，可自建个人微信通知系统** ✨
+
+---
+
+## 🚀 **推荐使用 Release 版本**
+
+> **⚠️ 重要提示：** 强烈建议使用 [**最新 Release 版本**](https://github.com/zdev0x/wxpush/releases/latest) 而非主分支代码，以获得更稳定的使用体验和完整的功能支持。
+
+[![Latest Release](https://img.shields.io/github/v/release/zdev0x/wxpush?style=for-the-badge&logo=github&color=brightgreen)](https://github.com/zdev0x/wxpush/releases/latest)
+
+---
 
 </div>
 
@@ -43,11 +53,29 @@
 
 ## 🚀 快速开始
 
-### 方式一：Docker 运行 (推荐)
+### 方式一：二进制文件 (强烈推荐)
+
+> 📦 **推荐选择：** 下载预编译的二进制文件，无需安装Go环境，开箱即用
 
 ```bash
-# 拉取镜像
-docker pull ghcr.io/zdev0x/wxpush:main
+# 下载最新 Release 版本
+wget https://github.com/zdev0x/wxpush/releases/latest/download/wxpush_Linux_x86_64.tar.gz
+tar -xzf wxpush_Linux_x86_64.tar.gz
+
+# 配置并运行
+cp config.example.yaml config.yaml
+vim config.yaml
+./wxpush -c config.yaml
+```
+
+### 方式二：Docker 运行
+
+```bash
+# 拉取最新 Release 版本镜像 (推荐)
+docker pull ghcr.io/zdev0x/wxpush:latest
+
+# 或使用指定版本号
+# docker pull ghcr.io/zdev0x/wxpush:v1.0.0
 
 # 下载配置文件模板
 curl -O https://raw.githubusercontent.com/zdev0x/wxpush/main/config.example.yaml
@@ -63,20 +91,7 @@ docker run -d \
   -v $(pwd)/config.yaml:/app/config.yaml:ro \
   -v $(pwd)/logs:/app/logs \
   --restart unless-stopped \
-  ghcr.io/zdev0x/wxpush:main
-```
-
-### 方式二：二进制文件
-
-```bash
-# 下载最新版本
-wget https://github.com/zdev0x/wxpush/releases/latest/download/wxpush_Linux_x86_64.tar.gz
-tar -xzf wxpush_Linux_x86_64.tar.gz
-
-# 配置并运行
-cp config.example.yaml config.yaml
-vim config.yaml
-./wxpush -c config.yaml
+  ghcr.io/zdev0x/wxpush:latest
 ```
 
 ### 方式三：源码编译
@@ -229,7 +244,7 @@ curl -X POST "http://localhost:8801/wx/push?api_key=your_api_key&template=github
 version: '3.8'
 services:
   wxpush:
-    image: ghcr.io/zdev0x/wxpush:main
+    image: ghcr.io/zdev0x/wxpush:latest  # 使用最新 Release 版本
     container_name: wxpush
     restart: unless-stopped
     ports:

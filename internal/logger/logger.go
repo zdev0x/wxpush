@@ -31,9 +31,14 @@ func Init(file string) error {
 		return fmt.Errorf("创建日志目录失败: %v", err)
 	}
 	
-	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600) // #nosec G304 -- 日志文件路径已转换为绝对路径
+	// 使用更宽松的权限以支持Docker挂载目录
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		return fmt.Errorf("打开日志文件失败: %v", err)
+		// 如果权限问题，尝试更宽松的权限
+		f, err = os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			return fmt.Errorf("打开日志文件失败 (已尝试多种权限): %v", err)
+		}
 	}
 	_ = f.Close()
 	logFile = file
@@ -45,9 +50,14 @@ func write(entry model.LogEntry) error {
 	mu.Lock()
 	defer mu.Unlock()
 
-	f, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600) // #nosec G304 -- logFile已经通过Init函数验证
+	// 使用更宽松的权限以支持Docker挂载目录
+	f, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // #nosec G304 -- logFile已经通过Init函数验证
 	if err != nil {
-		return fmt.Errorf("打开日志文件失败: %v", err)
+		// 如果权限问题，尝试更宽松的权限
+		f, err = os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666) // #nosec G304
+		if err != nil {
+			return fmt.Errorf("打开日志文件失败 (已尝试多种权限): %v", err)
+		}
 	}
 	defer func() {
 		if err := f.Close(); err != nil {

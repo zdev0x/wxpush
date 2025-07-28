@@ -2,11 +2,9 @@
 
 # WxPush
 
-[![CI](https://github.com/zdev0x/wxpush/actions/workflows/ci.yml/badge.svg)](https://github.com/zdev0x/wxpush/actions/workflows/ci.yml)
 [![Docker](https://github.com/zdev0x/wxpush/actions/workflows/docker.yml/badge.svg)](https://github.com/zdev0x/wxpush/actions/workflows/docker.yml)
 [![Release](https://github.com/zdev0x/wxpush/actions/workflows/release.yml/badge.svg)](https://github.com/zdev0x/wxpush/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/zdev0x/wxpush/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/zdev0x/wxpush)
-[![Go Report Card](https://goreportcard.com/badge/github.com/zdev0x/wxpush)](https://goreportcard.com/report/github.com/zdev0x/wxpush)
 [![GoDoc](https://godoc.org/github.com/zdev0x/wxpush?status.svg)](https://godoc.org/github.com/zdev0x/wxpush)
 [![License](https://img.shields.io/github/license/zdev0x/wxpush.svg)](https://github.com/zdev0x/wxpush/blob/main/LICENSE)
 

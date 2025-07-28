@@ -24,6 +24,13 @@ func Init(file string) error {
 		return fmt.Errorf("无法获取日志文件绝对路径: %v", err)
 	}
 	file = absFile
+	
+	// 确保日志文件目录存在
+	logDir := filepath.Dir(file)
+	if err := os.MkdirAll(logDir, 0755); err != nil {
+		return fmt.Errorf("创建日志目录失败: %v", err)
+	}
+	
 	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600) // #nosec G304 -- 日志文件路径已转换为绝对路径
 	if err != nil {
 		return fmt.Errorf("打开日志文件失败: %v", err)

@@ -33,7 +33,8 @@ RUN chmod +x /app/wxpush
 
 # 创建日志目录并设置权限
 RUN mkdir -p /app/logs && \
-    chown -R appuser:appgroup /app
+    chown -R appuser:appgroup /app && \
+    chmod 755 /app/logs
 
 # 切换到非 root 用户
 USER appuser

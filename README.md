@@ -109,11 +109,27 @@ wechat:
 ### 模板配置
 ```yaml
 templates:
-  - name: "notification"      # 模板名称
-    id: "TEMPLATE_ID"         # 微信模板消息 ID
-    title: "通知消息"         # 模板说明
-    content: "内容：{{CONTENT.DATA}} 时间：{{TIME.DATA}}"
+  - name: "sms_forward"      # 模板名称，用于API调用
+    id: "TEMPLATE_ID"        # 微信模板消息 ID
+    title: "短信转发"        # 模板说明
+    content: "短信来源：{{SOURCE.DATA}} 消息内容：{{CONTENT.DATA}} 发送时间：{{DATETIME.DATA}}"
+  
+  - name: "github_monitor"   # GitHub监控模板
+    id: "XYZ1234567890abc"   # 微信模板消息 ID
+    title: "GitHub监控"      # 模板说明  
+    content: "监控人员：{{MONITOR.DATA}} 操作时间：{{CREATED_AT.DATA}} 操作类型：{{EVENT_TYPE.DATA}} 项目名称：{{PROJECT_NAME.DATA}} 项目作者：{{DEVELOPER.DATA}} 告警时间：{{DATETIME.DATA}}"
 ```
+
+**模板变量说明：**
+- 模板 `content` 中使用 `{{VARIABLE_NAME.DATA}}` 格式定义变量占位符
+- API 请求时，请求体中的字段名为 `VARIABLE_NAME`（不包含 `.DATA` 后缀）
+- 系统会自动将请求体中的字段值替换到对应的模板占位符中
+
+**如何获取微信模板 ID：**
+1. 登录 [微信公众平台](https://mp.weixin.qq.com/)
+2. 进入"功能" -> "模板消息"
+3. 添加或选择现有模板，获取模板 ID
+4. 模板格式必须与配置文件中的 `content` 字段匹配
 
 ### 用户和分组配置
 ```yaml
@@ -149,13 +165,39 @@ server:
 - `notify_group` (query, required): 通知组名称
 
 **请求体示例：**
-```json
-{
-  "source": "系统通知",
-  "content": "您有新的消息需要处理",
-  "datetime": "2024-03-21 15:04:05"
-}
+
+根据模板变量动态构建请求体，例如 `sms_forward` 模板：
+
+```bash
+# 使用 sms_forward 模板发送消息
+curl -X POST "http://localhost:8801/wx/push?api_key=your_api_key&template=sms_forward&notify_group=default" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "SOURCE": "移动10086",
+    "CONTENT": "您的验证码是123456，5分钟内有效。",
+    "DATETIME": "2025-07-28 15:30:45"
+  }'
 ```
+
+使用 `github_monitor` 模板：
+
+```bash
+curl -X POST "http://localhost:8801/wx/push?api_key=your_api_key&template=github_monitor&notify_group=admin" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "MONITOR": "GitHub Bot",
+    "CREATED_AT": "2025-07-28T15:30:45Z",
+    "EVENT_TYPE": "push",
+    "PROJECT_NAME": "awesome-project",
+    "DEVELOPER": "zdev0x",
+    "DATETIME": "2025-07-28 15:30:45"
+  }'
+```
+
+**请求体参数说明：**
+- 请求体中的字段名必须与模板中定义的变量名完全一致（不包含 `.DATA` 后缀）
+- 每个字段的值将替换模板内容中对应的 `{{FIELD_NAME.DATA}}` 占位符
+- 所有在模板 `content` 中使用的变量都必须在请求体中提供
 
 **响应示例：**
 ```json
@@ -328,12 +370,23 @@ A:
 </details>
 
 <details>
-<summary><strong>Q: 容器启动失败怎么办？</strong></summary>
+<summary><strong>Q: 如何获取模板变量列表？</strong></summary>
 
 A: 
-1. 检查配置文件路径和权限：`docker logs wxpush`
-2. 确保端口 8801 未被占用：`netstat -tlnp | grep 8801`
-3. 检查配置文件格式是否正确
+1. 查看配置文件中的模板定义，如 `config.example.yaml`
+2. 模板 `content` 中的 `{{VARIABLE_NAME.DATA}}` 对应请求参数 `VARIABLE_NAME`
+3. 例如模板内容为 "消息：{{CONTENT.DATA}} 时间：{{TIME.DATA}}"，则请求体需要包含 `CONTENT` 和 `TIME` 字段
+4. 可以通过微信公众平台查看模板消息的字段要求
+</details>
+
+<details>
+<summary><strong>Q: 模板变量不匹配怎么办？</strong></summary>
+
+A: 
+1. 确保请求体中的字段名与模板变量名一致（去掉 `.DATA` 后缀）
+2. 检查配置文件中模板的 `content` 字段格式
+3. 所有模板中使用的变量都必须在请求体中提供
+4. 变量名区分大小写
 </details>
 
 <details>

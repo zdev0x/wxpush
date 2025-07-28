@@ -17,10 +17,12 @@ var (
 
 // Init 初始化日志
 func Init(file string) error {
-	// 只允许绝对路径，防止目录穿越
-	if !filepath.IsAbs(file) {
-		return fmt.Errorf("日志文件路径必须为绝对路径: %s", file)
+	// 转换为绝对路径，支持相对路径但转换为绝对路径
+	absFile, err := filepath.Abs(file)
+	if err != nil {
+		return fmt.Errorf("无法获取日志文件绝对路径: %v", err)
 	}
+	file = absFile
 	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		return fmt.Errorf("打开日志文件失败: %v", err)

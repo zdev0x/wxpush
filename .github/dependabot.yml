@@ -1,0 +1,60 @@
+version: 2
+updates:
+  # Go modules dependency updates
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "Asia/Shanghai"
+    # 限制 PR 数量，避免过多更新
+    open-pull-requests-limit: 5
+    # 自动合并补丁版本更新
+    auto-merge:
+      squash-merge: true
+    # 标签配置
+    labels:
+      - "dependencies"
+      - "go"
+    # 提交消息前缀
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # 忽略某些依赖（如果需要）
+    ignore:
+      # 忽略主要版本更新，只更新补丁和次要版本
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  
+  # Docker base image updates
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:30"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+  
+  # GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

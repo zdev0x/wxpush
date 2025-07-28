@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zdev0x/wxpush/internal/config"
@@ -19,23 +20,54 @@ func HandleWeChatEvent(c *gin.Context) {
 	echostr := c.Query("echostr")
 
 	// 获取配置
-	cfg := c.MustGet("config").(*config.Config)
-
-	if signature == "" || timestamp == "" || nonce == "" || echostr == "" {
-		logger.Error(model.ActionWeChatVerify, requestID, model.ErrInvalidParam, nil, map[string]interface{}{
-			"signature": signature,
-			"timestamp": timestamp,
-			"nonce":     nonce,
-		})
-		c.String(http.StatusBadRequest, "missing parameters")
+	cfg, exists := c.Get("config")
+	if !exists {
+		logger.Error(model.ActionWeChatVerify, requestID, model.ErrInternal, nil, nil)
+		c.String(http.StatusInternalServerError, "server configuration error")
+		return
+	}
+	
+	config, ok := cfg.(*config.Config)
+	if !ok {
+		logger.Error(model.ActionWeChatVerify, requestID, model.ErrInternal, nil, nil)
+		c.String(http.StatusInternalServerError, "server configuration error")
 		return
 	}
 
-	if wechat.CheckSignature(cfg, signature, timestamp, nonce) {
+	// 详细的参数验证和错误信息
+	var missingParams []string
+	if signature == "" {
+		missingParams = append(missingParams, "signature")
+	}
+	if timestamp == "" {
+		missingParams = append(missingParams, "timestamp")
+	}
+	if nonce == "" {
+		missingParams = append(missingParams, "nonce")
+	}
+	if echostr == "" {
+		missingParams = append(missingParams, "echostr")
+	}
+
+	if len(missingParams) > 0 {
+		logger.Error(model.ActionWeChatVerify, requestID, model.ErrInvalidParam, nil, map[string]interface{}{
+			"missing_params": missingParams,
+			"signature":      signature,
+			"timestamp":      timestamp,
+			"nonce":          nonce,
+			"echostr":        echostr,
+		})
+		c.String(http.StatusBadRequest, "missing required parameters: "+strings.Join(missingParams, ", "))
+		return
+	}
+
+	// 验证签名
+	if wechat.CheckSignature(config, signature, timestamp, nonce) {
 		logger.Info(model.ActionWeChatVerify, requestID, map[string]interface{}{
 			"signature": signature,
 			"timestamp": timestamp,
 			"nonce":     nonce,
+			"status":    "success",
 		})
 		c.String(http.StatusOK, echostr)
 	} else {
@@ -43,6 +75,7 @@ func HandleWeChatEvent(c *gin.Context) {
 			"signature": signature,
 			"timestamp": timestamp,
 			"nonce":     nonce,
+			"status":    "signature_failed",
 		})
 		c.String(http.StatusForbidden, "signature verification failed")
 	}

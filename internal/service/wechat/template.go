@@ -49,7 +49,6 @@ func SendTemplateMsg(
 			"value": fmt.Sprint(value),
 		}
 	}
-
 	// 并发发送消息
 	var wg sync.WaitGroup
 	var mu sync.Mutex

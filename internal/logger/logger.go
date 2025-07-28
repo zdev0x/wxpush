@@ -71,8 +71,12 @@ func Error(
 	extra map[string]interface{},
 ) {
 	entry := model.NewLogEntry(model.LevelError, action, model.StatusError, requestID).
-		WithCode(code).
-		WithMessage(err.Error())
+		WithCode(code)
+	
+	if err != nil {
+		entry = entry.WithMessage(err.Error())
+	}
+	
 	if extra != nil {
 		entry = entry.WithExtra(extra)
 	}

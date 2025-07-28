@@ -1,3 +1,4 @@
+// Package middleware provides HTTP middleware functions for the WeChat push service.
 package middleware
 
 import (

@@ -13,7 +13,7 @@ func Load(filename string) (*Config, error) {
 	// if !filepath.IsAbs(filename) && !strings.HasPrefix(filename, ".") {
 	// 	return nil, fmt.Errorf("配置文件路径不安全: %s", filename)
 	// }
-	data, err := os.ReadFile(filename)
+	data, err := os.ReadFile(filename) // #nosec G304 -- 配置文件路径由调用方控制
 	if err != nil {
 		return nil, fmt.Errorf("读取配置文件失败: %v", err)
 	}

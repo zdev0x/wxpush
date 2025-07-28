@@ -1,3 +1,5 @@
+version: 2
+
 run:
   timeout: 5m
   modules-download-mode: readonly
@@ -6,28 +8,19 @@ run:
 linters:
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
-    - goimports
     - misspell
     - unconvert
     - goconst
     - gocyclo
     - gosec
     - revive
-    - stylecheck
     - unparam
     - nakedret
     - prealloc
-    - exportloopref
-  disable:
-    - structcheck
-    - varcheck
-    - deadcode
 
 linters-settings:
   gocyclo:
@@ -38,7 +31,7 @@ linters-settings:
     confidence: medium
   
   revive:
-    min-confidence: 0.8
+    confidence: 0.8
     
   goconst:
     min-len: 3
@@ -73,4 +66,3 @@ output:
   format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
-  uniq-by-line: true

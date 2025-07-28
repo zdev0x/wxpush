@@ -1,3 +1,4 @@
+// Package main implements the WeChat Mini Program push notification server.
 package main
 
 import (

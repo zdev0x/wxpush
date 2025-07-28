@@ -1,3 +1,4 @@
+// Package handler provides HTTP request handlers for the WeChat push service.
 package handler
 
 import (

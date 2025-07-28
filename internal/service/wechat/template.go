@@ -1,3 +1,4 @@
+// Package wechat provides WeChat API integration functionality.
 package wechat
 
 import (
@@ -89,7 +90,11 @@ func SendTemplateMsg(
 				mu.Unlock()
 				return
 			}
-			defer resp.Body.Close()
+			defer func() {
+				if err := resp.Body.Close(); err != nil {
+					fmt.Printf("关闭响应体失败: %v\n", err)
+				}
+			}()
 
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {

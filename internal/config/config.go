@@ -1,3 +1,4 @@
+// Package config provides configuration management for the WeChat push service.
 package config
 
 // Config 配置结构体

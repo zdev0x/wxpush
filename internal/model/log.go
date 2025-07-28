@@ -1,3 +1,4 @@
+// Package model defines data structures and models for the WeChat push service.
 package model
 
 import "time"

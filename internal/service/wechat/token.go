@@ -47,7 +47,11 @@ func GetAccessToken(cfg *config.Config) (string, error) {
 		logger.Error("token_refresh", "", model.ErrInternal, err, nil)
 		return "", fmt.Errorf("请求access_token失败: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Printf("关闭响应体失败: %v\n", err)
+		}
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

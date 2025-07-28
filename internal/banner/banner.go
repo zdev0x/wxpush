@@ -1,3 +1,4 @@
+// Package banner provides application banner display functionality.
 package banner
 
 import (
